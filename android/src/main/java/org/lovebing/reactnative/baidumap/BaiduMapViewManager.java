@@ -44,7 +44,7 @@ public class BaiduMapViewManager extends ViewGroupManager<MapView> {
     private HashMap<String, Marker> mMarkerMap = new HashMap<>();
     private HashMap<String, List<Marker>> mMarkersMap = new HashMap<>();
     private TextView mMarkerText;
-
+    private BaiduMap map;
     public String getName() {
         return REACT_CLASS;
     }
@@ -159,6 +159,17 @@ public class BaiduMapViewManager extends ViewGroupManager<MapView> {
             }
         }
         mMarkersMap.put(key, markers);
+    }
+
+    @ReactProp(name="polyline")
+    public void setPolyline(MapView mapView, @Nullable ReadableArray options) {
+        if(options==null||options.size()<=0){return;}
+        List<LatLng> points = new ArrayList<LatLng>();
+        for (int i = 0; i < options.size(); i++) {
+            ReadableMap option = options.getMap(i);
+            points.add(new LatLng(option.getDouble("latitude"),option.getDouble("longitude")));
+        }
+        PolylineUtil.drawTrackLine(map,points);
     }
 
     @ReactProp(name = "childrenPoints")
