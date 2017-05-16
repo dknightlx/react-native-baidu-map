@@ -171,6 +171,19 @@ public class BaiduMapViewManager extends ViewGroupManager<MapView> {
         }
         PolylineUtil.drawTrackLine(map,points);
     }
+    
+    @ReactProp(name="polylineColor")
+    public void setPolylineColor(MapView mapView, String color) {
+        if(color != null){
+            PolylineUtil.setLineColor(Color.parseColor(color));
+        }
+    }
+    @ReactProp(name="polylineWidth")
+    public void setPolylineWidth(MapView mapView, int width) {
+        if(width>0) {
+            PolylineUtil.setLineWidth(width);
+        }
+    }
 
     @ReactProp(name = "childrenPoints")
     public void setChildrenPoints(MapView mapView, ReadableArray childrenPoints) {
