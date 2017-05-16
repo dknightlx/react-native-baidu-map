@@ -22,6 +22,31 @@ project(':react-native-baidu-map').projectDir = new File(settingsDir, '../node_m
 - AndroidMainifest.xml `<meta-data
             android:name="com.baidu.lbsapi.API_KEY" android:value="xx"/>`
 
+    `<service
+        android:name="com.baidu.trace.LBSTraceService"
+        android:enabled="true"
+        android:process=":remote">
+    </service>`
+
+    权限：
+    `<uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>`
+
 #### Xcode
 - Project navigator->Libraries->Add Files to 选择 react-native-baidu-map/ios/RCTBaiduMap.xcodeproj
 - Project navigator->Build Phases->Link Binary With Libraries 加入 libRCTBaiduMap.a
@@ -42,19 +67,22 @@ project(':react-native-baidu-map').projectDir = new File(settingsDir, '../node_m
 
 ### Usage 使用方法
 
-    import { MapView, MapTypes, MapModule, Geolocation } from 'react-native-baidu-map
+    import { MapView, MapTypes, MapModule, Geolocation,Track } from 'react-native-baidu-map
 
 #### MapView Props 属性
 | Name                    | Type  | Default  | Extra
 | ----------------------- |:-----:| :-------:| -------
 | zoomControlsVisible     | bool  | true     | Android only
 | trafficEnabled          | bool  | false    |
-| baiduHeatMapEnabled     | bool  | false    |
+| baiduHeatMapEnabled     | bool  | false    | 开启热力图
 | mapType                 | number| 1        |
-| zoom                    | number| 10       |
+| zoom                    | number| 10       | 地图缩放
 | center                  | object| null     | {latitude: 0, longitude: 0}
 | marker                  | object| null     | {latitude: 0, longitude: 0, title: ''}
 | markers                 | array | []       | [marker, maker]
+| polyline                | array | undefined| Android only [{latitude:0.0,longitude:0.0}] 至少两个点 画线/画轨迹
+| polylineColor           | string | blue | Android only '#FF0000' 格式必须这样 线颜色
+| polylineWidth           | number | 10 | Android only 线宽
 | onMapStatusChangeStart  | func  | undefined| Android only
 | onMapStatusChange       | func  | undefined|
 | onMapStatusChangeFinish | func  | undefined| Android only
@@ -90,5 +118,6 @@ project(':react-native-baidu-map').projectDir = new File(settingsDir, '../node_m
 | Promise stopTrack() | Android:'{"code":"","message":""}' | 关闭鹰眼服务并关闭采集信息
 | Promise startGather() | Android:'{"code":"","message":""}'| 开始采集信息
 | Promise stopGather() | Android:'{"code":"","message":""}' | 关闭采集信息
-
-| Promise queryHistoryTrack(String name,int startTime,int endTime) | Android:'{}'
+| Promise queryHistoryTrack(String name,int startTime,int endTime) | Android:'{"trackPoints": [{"point": {"coorType": "bd09ll","speed": 0,"height": 0,"direction": 0,"radius": 0,"locTime": 0,"longitude": 0.0,"latitude": 0.0},"objectName": null,"createTime": "2017-05-0810: 41: 26"}],"startPoint": {"coorType": "bd09ll","speed": 0,"height": 0,"direction": 0,"radius": 0,"locTime": 0,"longitude": 0.0,"latitude": 0.0},"endPoint": {"coorType": "bd09ll","speed": 0,"height": 0,"direction": 0,"radius": 0,"locTime": 0.0,"longitude": 0.0,"latitude": 0.0},"tollDistance": 0,"entityName": "default","size": 0,"code": 0,"distance": 0,"total": 0,"message": "成功"}'| 获取name的历史轨迹
+| Promise queryEntityList(int activeTime) | Android:'{"message": "成功","status": 0,"size": 0,"total": 0,"entities": [{"latestLocation": {"floor": "","coorType": "bd09ll","speed": 0,"height": 0,"direction": 0,"radius": 0,"locTime": 0,"longitude": 0.0,"latitude": 0.0},"modifyTime": "2017-05-08 14:54:24","entityName": "default","entityDesc": null,"createTime": "2017-05-08 10:41:26"}]}' | 获取活跃用户（以activeTime为限，在这个时间之后有上传位置数据的即为活跃用户，否则为离线）
+| Promise queryEntityList(int inactiveTime) | Android:同上 | 获取不活跃用户（以inactiveTime为限，在这个时间之后有上传位置数据的即为活跃用户，否则为离线）
