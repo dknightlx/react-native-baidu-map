@@ -81,3 +81,14 @@ project(':react-native-baidu-map').projectDir = new File(settingsDir, '../node_m
 | Promise reverseGeoCodeGPS(double lat, double lng) |  `{"address": "", "province": "", "cityCode": "", "city": "", "district": "", "streetName": "", "streetNumber": ""}`
 | Promise geocode(String city, String addr) | {"latitude": 0.0, "longitude": 0.0}
 | Promise getCurrentPosition() | IOS: `{"latitude": 0.0, "longitude": 0.0, "address": "", "province": "", "cityCode": "", "city": "", "district": "", "streetName": "", "streetNumber": ""}` Android: `{"latitude": 0.0, "longitude": 0.0, "direction": -1, "altitude": 0.0, "radius": 0.0, "address": "", "countryCode": "", "country": "", "province": "", "cityCode": "", "city": "", "district": "", "street": "", "streetNumber": "", "buildingId": "", "buildingName": ""}`
+
+#### Track Methods
+|Method|Result|Remark
+|------|-------|-----
+| initTrace (String name)||百度地图的鉴权需要时间，因而可以在componentWillMount中初始化鹰眼服务
+| Promise startTrack() | Android:'{"code":"","message":""}' | 启动鹰眼服务
+| Promise stopTrack() | Android:'{"code":"","message":""}' | 关闭鹰眼服务并关闭采集信息
+| Promise startGather() | Android:'{"code":"","message":""}'| 开始采集信息
+| Promise stopGather() | Android:'{"code":"","message":""}' | 关闭采集信息
+
+| Promise queryHistoryTrack(String name,int startTime,int endTime) | Android:'{}'
